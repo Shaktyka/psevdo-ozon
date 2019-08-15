@@ -10,6 +10,9 @@ const cartWrapper = cartWindow.querySelector('.cart-wrapper');
 const emptyText = cartWindow.querySelector('#cart-empty');
 let cardsAmount = 0;
 const cartCounter = document.querySelector('.counter');
+const sumEl = cartWindow.querySelector('.cart-total span');
+// const cardPrice = cart.querySelectorAll('.card-price');
+// console.log(cardPrice);
 
 // Переключение классов при нажатии на чекбокс
 checkbox.addEventListener('change', function(evt) {
@@ -61,26 +64,36 @@ const cartBtnClickHandler = (evt) => {
 // Вешаем обработчик нажатия на кнопку корзины
 cartBtn.addEventListener('click', cartBtnClickHandler);
 
-// Обработчик клика по карточке
-// const cardClickHandler = (evt) => {
-//   evt.preventDefault();
-//   const clickedEl = evt.target;
-//   console.log(clickedEl);
-// };
-
 //Ввывод кол-ва товаров на иконке корзины
 const showCardsAmount = () => {
   cardsAmount = cartWrapper.querySelectorAll('.card').length;
   cartCounter.textContent = cardsAmount;
 };
 
+// Показать сумму товаров
+const showPrice = (price) => {
+  sumEl.textContent = Number(sumEl.textContent) + Number(price);
+};
+
 // Вешаем обработчики на карточки
 cards.forEach((card) => {
   const cardBtn = card.querySelector('button');
+
   cardBtn.addEventListener('click', (evt) => {
     const cardClone = card.cloneNode(true);
     cartWrapper.appendChild(cardClone);
+
     emptyText.style.display = 'none';
+
     showCardsAmount();
+
+    let cardPrice = card.querySelector('.card-price').textContent;
+    showPrice(parseFloat(cardPrice));
+
+    // У карточки заменить тект на кнопке,
+    // удалить старый обработчик
+    // и навесить другой обработчик
   });
+
 });
+
