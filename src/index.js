@@ -84,66 +84,69 @@ const toggleCart = () => {
 
 toggleCart();
 
+// Работа с содержимым корзины
+const addCart = () => {
+  // Выводим кол-во товаров на иконке корзины
+  const showCardsAmount = () => {
+    cardsAmount = cartWrapper.querySelectorAll('.card').length;
+    cartCounter.textContent = cardsAmount;
+  };
 
-// Выводим кол-во товаров на иконке корзины
-const showCardsAmount = () => {
-  cardsAmount = cartWrapper.querySelectorAll('.card').length;
-  cartCounter.textContent = cardsAmount;
-};
+  // Показать сумму товаров
+  const showPrice = (price) => {
+    sumEl.textContent = Number(sumEl.textContent) + Number(price);
+  };
 
-// Показать сумму товаров
-const showPrice = (price) => {
-  sumEl.textContent = Number(sumEl.textContent) + Number(price);
-};
+  // Уменьшение суммы заказа при удаление товара из корзины
+  const reducePrice = (price) => {
+    sumEl.textContent = Number(sumEl.textContent) - Number(price);
+  };
 
-// Уменьшение суммы заказа при удаление товара из корзины
-const reducePrice = (price) => {
-  sumEl.textContent = Number(sumEl.textContent) - Number(price);
-};
+  // Вешаем обработчики на карточки
+  cards.forEach((card) => {
+    const cardBtn = card.querySelector('button');
 
-// Вешаем обработчики на карточки
-cards.forEach((card) => {
-  const cardBtn = card.querySelector('button');
+    cardBtn.addEventListener('click', (evt) => {
+      // Действия с карточкой
+      const cardClone = card.cloneNode(true);
 
-  cardBtn.addEventListener('click', (evt) => {
-    // Действия с карточкой
-    const cardClone = card.cloneNode(true);
+      // Помещаем карточку в корзину
+      cartWrapper.appendChild(cardClone);
+      const removeBtn = cardClone.querySelector('button');
+      removeBtn.textContent = 'Удалить из корзины';
+      removeBtn.addEventListener('click', (evt) => {
+        evt.preventDefault();
+        cardClone.remove();
+        //Ууменьшаем общую стоимость товаров
+        reducePrice(parseFloat(cardClone.querySelector('.card-price').textContent));
+        // Уменьшаем цифру на счетчике товаров
+        showCardsAmount();
+        // Возвращаем текст "Корзина пуста"
+        if (cartWrapper.children.length === 1) {
+          emptyText.style.display = 'block';
+        }
+        // Меняем состояние кнопки отправки
+        if (checkCartGoodsNumber()) {
+          cartSend.disabled = true;
+        }
+      });
 
-    // Помещаем карточку в корзину
-    cartWrapper.appendChild(cardClone);
-    const removeBtn = cardClone.querySelector('button');
-    removeBtn.textContent = 'Удалить из корзины';
-    removeBtn.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      cardClone.remove();
-      //Ууменьшаем общую стоимость товаров
-      reducePrice(parseFloat(cardClone.querySelector('.card-price').textContent));
-      // Уменьшаем цифру на счетчике товаров
+      // Делаем другие д-вия после добавления карточки
+      emptyText.style.display = 'none';
+
       showCardsAmount();
-      // Возвращаем текст "Корзина пуста"
-      if (cartWrapper.children.length === 1) {
-        emptyText.style.display = 'block';
-      }
-      // Меняем состояние кнопки отправки
-      if (checkCartGoodsNumber()) {
-        cartSend.disabled = true;
-      }
+
+      let cardPrice = card.querySelector('.card-price').textContent;
+      showPrice(parseFloat(cardPrice));
     });
 
-    // Делаем другие д-вия после добавления карточки
-    emptyText.style.display = 'none';
-
-    showCardsAmount();
-
-    let cardPrice = card.querySelector('.card-price').textContent;
-    showPrice(parseFloat(cardPrice));
   });
+};
 
-});
+addCart();
 
 // Фильтр акции
 
 
 
 // Реализация дублирования товара
-// Инактивация кнопки "Оформить заказ" в корзине
