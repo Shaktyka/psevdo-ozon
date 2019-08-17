@@ -99,6 +99,10 @@ cards.forEach((card) => {
       reducePrice(parseFloat(cardClone.querySelector('.card-price').textContent));
       // Уменьшаем цифру на счетчике товаров
       showCardsAmount();
+      // Возвращаем текст "Корзина пуста"
+      if (cartWrapper.children.length === 1) {
+        emptyText.style.display = 'block';
+      }
     });
 
     // Делаем другие д-вия после добавления карточки
