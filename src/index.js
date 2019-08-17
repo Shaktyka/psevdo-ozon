@@ -64,7 +64,7 @@ const cartBtnClickHandler = (evt) => {
 // Вешаем обработчик нажатия на кнопку корзины
 cartBtn.addEventListener('click', cartBtnClickHandler);
 
-//Ввывод кол-ва товаров на иконке корзины
+// Выводим кол-во товаров на иконке корзины
 const showCardsAmount = () => {
   cardsAmount = cartWrapper.querySelectorAll('.card').length;
   cartCounter.textContent = cardsAmount;
@@ -75,24 +75,39 @@ const showPrice = (price) => {
   sumEl.textContent = Number(sumEl.textContent) + Number(price);
 };
 
+// Уменьшение суммы заказа при удаление товара из корзины
+const reducePrice = (price) => {
+  sumEl.textContent = Number(sumEl.textContent) - Number(price);
+};
+
 // Вешаем обработчики на карточки
 cards.forEach((card) => {
   const cardBtn = card.querySelector('button');
 
   cardBtn.addEventListener('click', (evt) => {
+    // Действия с карточкой
     const cardClone = card.cloneNode(true);
-    cartWrapper.appendChild(cardClone);
 
+    // Помещаем карточку в корзину
+    cartWrapper.appendChild(cardClone);
+    const removeBtn = cardClone.querySelector('button');
+    removeBtn.textContent = 'Удалить из корзины';
+    removeBtn.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      cardClone.remove();
+      //Ууменьшаем общую стоимость товаров
+      reducePrice(parseFloat(cardClone.querySelector('.card-price').textContent));
+      // Уменьшаем цифру на счетчике товаров
+      showCardsAmount();
+    });
+
+    // Делаем другие д-вия после добавления карточки
     emptyText.style.display = 'none';
 
     showCardsAmount();
 
     let cardPrice = card.querySelector('.card-price').textContent;
     showPrice(parseFloat(cardPrice));
-
-    // У карточки заменить тект на кнопке,
-    // удалить старый обработчик
-    // и навесить другой обработчик
   });
 
 });
