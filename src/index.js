@@ -15,6 +15,13 @@ const cartCounter = document.querySelector('.counter');
 const sumEl = cartWindow.querySelector('.cart-total span');
 // const cardPrice = cart.querySelectorAll('.card-price');
 
+
+// Проверка кол-ва товаров в корзине
+const checkCartGoodsNumber = () => {
+  return cartWrapper.children.length === 1;
+};
+
+
 // Работа с чекбоксами
 const toggleCheckbox = () => {
   // Переключение классов при нажатии на чекбокс
@@ -27,12 +34,6 @@ const toggleCheckbox = () => {
   });
 };
 
-toggleCheckbox();
-
-// Проверка кол-ва товаров в корзине
-const checkCartGoodsNumber = () => {
-  return cartWrapper.children.length === 1;
-};
 
 // Работа с корзиной
 const toggleCart = () => {
@@ -82,7 +83,6 @@ const toggleCart = () => {
   cartBtn.addEventListener('click', cartBtnClickHandler);
 };
 
-toggleCart();
 
 // Работа с содержимым корзины
 const addCart = () => {
@@ -143,10 +143,31 @@ const addCart = () => {
   });
 };
 
-addCart();
 
 // Фильтр акции
+const addActions = () => {
+  const discountCheckbox = document.querySelector('#discount-checkbox');
+  discountCheckbox.addEventListener('click', () => {
+    cards.forEach((card) => {
+      if (discountCheckbox.checked) {
+        if (card.querySelector('.card-sale')) {
+          //
+        }
+      } else {
+
+      }
+    });
+  });
+};
 
 
+//Ввызовы функций
+toggleCheckbox();
+toggleCart();
+addCart();
+addActions();
 
-// Реализация дублирования товара
+
+/* На доделать:
+ * Реализация дублирования товара
+*/
