@@ -1,68 +1,89 @@
 'use strict';
 
-const checkbox = document.querySelector('.filter-check_checkbox');
-const cartBtn = document.querySelector('#cart');
 const cartWindow = document.querySelector('.cart');
+const cartBtn = document.querySelector('#cart');
 const cartClose = cartWindow.querySelector('.cart-close');
 const cartSend = cartWindow.querySelector('.cart-confirm');
+
+const checkbox = document.querySelector('.filter-check_checkbox');
 const cards = document.querySelectorAll('.goods .card');
+
 const cartWrapper = cartWindow.querySelector('.cart-wrapper');
 const emptyText = cartWindow.querySelector('#cart-empty');
 let cardsAmount = 0;
 const cartCounter = document.querySelector('.counter');
 const sumEl = cartWindow.querySelector('.cart-total span');
 // const cardPrice = cart.querySelectorAll('.card-price');
-// console.log(cardPrice);
 
-// Переключение классов при нажатии на чекбокс
-checkbox.addEventListener('change', function(evt) {
-  if (this.checked) {
-    this.nextElementSibling.classList.add('checked');
-  } else {
-    this.nextElementSibling.classList.remove('checked');
-  }
-});
-
-// Обработчик нажатия на кнопку закрытия окна
-const cartCloseClickHandler = (evt) => {
-  evt.preventDefault();
-  closeCart();
+// Работа с чекбоксами
+const toggleCheckbox = () => {
+  // Переключение классов при нажатии на чекбокс
+  checkbox.addEventListener('change', function(evt) {
+    if (this.checked) {
+      this.nextElementSibling.classList.add('checked');
+    } else {
+      this.nextElementSibling.classList.remove('checked');
+    }
+  });
 };
 
-// Обработчик нажатия на кнопку отправки корзины
-const cartSendClickHandler = (evt) => {
-  evt.preventDefault();
-  closeCart();
+toggleCheckbox();
+
+// Проверка кол-ва товаров в корзине
+const checkCartGoodsNumber = () => {
+  return cartWrapper.children.length === 1;
 };
 
-// Закрытие окна корзины
-const closeCart = () => {
-  // Удаляем обработчик нажатия на кнопку закрытия окна
-  cartClose.removeEventListener('click', cartCloseClickHandler);
-  // Удаляем обработчик нажатия на кнопку отправки корзины
-  cartSend.removeEventListener('click', cartSendClickHandler);
-  cartWindow.style.display = 'none';
-  document.body.style.overflow = '';
-};
+// Работа с корзиной
+const toggleCart = () => {
 
-// Открытие окна корзины
-const openCart = () => {
-  // Вешаем обработчик нажатия на кнопку закрытия окна
-  cartClose.addEventListener('click', cartCloseClickHandler);
+  // Обработчик нажатия на кнопку закрытия окна
+  const cartCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    closeCart();
+  };
+
   // Обработчик нажатия на кнопку отправки корзины
-  cartSend.addEventListener('click', cartSendClickHandler);
-  cartWindow.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
+  const cartSendClickHandler = (evt) => {
+    evt.preventDefault();
+    closeCart();
+  };
+
+  // Закрытие окна корзины
+  const closeCart = () => {
+    // Удаляем обработчик нажатия на кнопку закрытия окна
+    cartClose.removeEventListener('click', cartCloseClickHandler);
+    // Удаляем обработчик нажатия на кнопку отправки корзины
+    cartSend.removeEventListener('click', cartSendClickHandler);
+    cartWindow.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  // Открытие окна корзины
+  const openCart = () => {
+    // Вешаем обработчик нажатия на кнопку закрытия окна
+    cartClose.addEventListener('click', cartCloseClickHandler);
+    // Обработчик нажатия на кнопку отправки корзины
+    if (!checkCartGoodsNumber()) {
+      cartSend.disabled = false;
+      cartSend.addEventListener('click', cartSendClickHandler);
+    }
+    cartWindow.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Обработчик нажатия на кнопку корзины
+  const cartBtnClickHandler = (evt) => {
+    evt.preventDefault();
+    openCart();
+  };
+
+  // Вешаем обработчик нажатия на кнопку корзины
+  cartBtn.addEventListener('click', cartBtnClickHandler);
 };
 
-// Обработчик нажатия на кнопку корзины
-const cartBtnClickHandler = (evt) => {
-  evt.preventDefault();
-  openCart();
-};
+toggleCart();
 
-// Вешаем обработчик нажатия на кнопку корзины
-cartBtn.addEventListener('click', cartBtnClickHandler);
 
 // Выводим кол-во товаров на иконке корзины
 const showCardsAmount = () => {
@@ -103,6 +124,10 @@ cards.forEach((card) => {
       if (cartWrapper.children.length === 1) {
         emptyText.style.display = 'block';
       }
+      // Меняем состояние кнопки отправки
+      if (checkCartGoodsNumber()) {
+        cartSend.disabled = true;
+      }
     });
 
     // Делаем другие д-вия после добавления карточки
@@ -116,3 +141,9 @@ cards.forEach((card) => {
 
 });
 
+// Фильтр акции
+
+
+
+// Реализация дублирования товара
+// Инактивация кнопки "Оформить заказ" в корзине
